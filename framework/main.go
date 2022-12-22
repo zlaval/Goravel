@@ -2,10 +2,13 @@ package goravel
 
 import (
 	"fmt"
+	"github.com/go-chi/chi/v5"
 	"github.com/joho/godotenv"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
+	"time"
 )
 
 const version = "1.0.0"
@@ -17,6 +20,13 @@ type Goravel struct {
 	ErrorLog *log.Logger
 	InfoLog  *log.Logger
 	RootPath string
+	Routes   *chi.Mux
+	config   config
+}
+
+type config struct {
+	port     string
+	renderer string
 }
 
 func (g *Goravel) New(rootPath string) error {
@@ -45,7 +55,12 @@ func (g *Goravel) New(rootPath string) error {
 	g.InfoLog = infoLog
 	g.Debug, _ = strconv.ParseBool(os.Getenv("DEBUG"))
 	g.Version = version
-
+	g.RootPath = rootPath
+	g.Routes = g.routes().(*chi.Mux)
+	g.config = config{
+		port:     os.Getenv("PORT"),
+		renderer: os.Getenv("RENDERER"),
+	}
 	return nil
 }
 
@@ -58,6 +73,20 @@ func (g *Goravel) Init(p initPaths) error {
 		}
 	}
 	return nil
+}
+
+func (g *Goravel) ListenAndServe() {
+	srv := &http.Server{
+		Addr:         fmt.Sprintf(":%s", g.config.port),
+		ErrorLog:     g.ErrorLog,
+		Handler:      g.routes(),
+		IdleTimeout:  30 * time.Second,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 300 * time.Second,
+	}
+	g.InfoLog.Printf("Listening on port %s", g.config.port)
+	err := srv.ListenAndServe()
+	g.ErrorLog.Fatal(err)
 }
 
 func (g *Goravel) checkDotEnv(path string) error {
