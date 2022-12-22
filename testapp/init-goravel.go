@@ -11,15 +11,17 @@ func initApplication() *application {
 	if err != nil {
 		log.Fatal(err)
 	}
-	g := &goravel.Goravel{}
-	err = g.New(path)
+	gorav := &goravel.Goravel{}
+	err = gorav.New(path)
 	if err != nil {
 		log.Fatal(err)
 	}
-	g.AppName = "testapp"
-	g.Debug = true
+	gorav.AppName = "testapp"
+
+	gorav.InfoLog.Println("Debug is set to", gorav.Debug)
+
 	app := &application{
-		App: g,
+		App: gorav,
 	}
 	return app
 }
