@@ -4,6 +4,7 @@ import (
 	"goravel"
 	"log"
 	"os"
+	handlers "testapp/handlers"
 )
 
 func initApplication() *application {
@@ -20,8 +21,15 @@ func initApplication() *application {
 
 	gorav.InfoLog.Println("Debug is set to", gorav.Debug)
 
-	app := &application{
+	routeHandlers := &handlers.Handlers{
 		App: gorav,
 	}
+
+	app := &application{
+		App:      gorav,
+		Handlers: routeHandlers,
+	}
+
+	app.App.Routes = app.routes()
 	return app
 }

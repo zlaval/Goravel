@@ -1,7 +1,6 @@
 package goravel
 
 import (
-	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
@@ -15,8 +14,8 @@ func (g *Goravel) routes() http.Handler {
 	if g.Debug {
 		mux.Use(middleware.Logger)
 	}
-	mux.Get("/", func(writer http.ResponseWriter, request *http.Request) {
-		fmt.Fprint(writer, "Welcome to Goravel")
-	})
+	//mux.Get("/", func(writer http.ResponseWriter, request *http.Request) {
+	//	fmt.Fprint(writer, "Welcome to Goravel")
+	//})
 	return mux
 }

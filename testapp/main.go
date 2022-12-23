@@ -1,9 +1,13 @@
 package main
 
-import "goravel"
+import (
+	"goravel"
+	"testapp/handlers"
+)
 
 type application struct {
-	App *goravel.Goravel
+	App      *goravel.Goravel
+	Handlers *handlers.Handlers
 }
 
 func main() {
