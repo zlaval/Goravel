@@ -63,7 +63,7 @@ func (g *Goravel) New(rootPath string) error {
 		port:     os.Getenv("PORT"),
 		renderer: os.Getenv("RENDERER"),
 	}
-	g.Render = g.createRenderer(g)
+	g.createRenderer()
 	return nil
 }
 
@@ -109,11 +109,11 @@ func (g *Goravel) startLoggers() (*log.Logger, *log.Logger) {
 	return infoLog, errorLog
 }
 
-func (g *Goravel) createRenderer(gorav *Goravel) *render.Render {
+func (g *Goravel) createRenderer() {
 	renderer := render.Render{
-		Renderer: gorav.config.renderer,
-		RootPath: gorav.RootPath,
-		Port:     gorav.config.port,
+		Renderer: g.config.renderer,
+		RootPath: g.RootPath,
+		Port:     g.config.port,
 	}
-	return &renderer
+	g.Render = &renderer
 }
