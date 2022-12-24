@@ -11,6 +11,7 @@ func (g *Goravel) routes() http.Handler {
 	mux.Use(middleware.RequestID)
 	mux.Use(middleware.RealIP)
 	mux.Use(middleware.Recoverer)
+	mux.Use(g.SessionLoad)
 	if g.Debug {
 		mux.Use(middleware.Logger)
 	}
