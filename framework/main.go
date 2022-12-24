@@ -92,6 +92,10 @@ func (g *Goravel) New(rootPath string) error {
 			domain:   os.Getenv("COOKIE_DOMAIN"),
 		},
 		sessionType: os.Getenv("SESSION_TYPE"),
+		database: databaseConfig{
+			database: dbType,
+			dsn:      g.BuildDSN(),
+		},
 	}
 
 	sess := session.Session{
@@ -133,6 +137,9 @@ func (g *Goravel) ListenAndServe() {
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 300 * time.Second,
 	}
+
+	defer g.DB.Pool.Close()
+
 	g.InfoLog.Printf("Listening on port %s", g.config.port)
 	err := srv.ListenAndServe()
 	g.ErrorLog.Fatal(err)
